@@ -21,6 +21,8 @@ io.on('connection', (socket) => {
     socket.on('messageToServer', (dataFromClient) => {
         console.log(dataFromClient)
     })
+    socket.join('level1')
+    io.of('/').to('level1').emit('joined', `${socket.id} saysI have joined level 1 room!`)
 })
 
 io.of('/admin').on('connection', (socket) => {
