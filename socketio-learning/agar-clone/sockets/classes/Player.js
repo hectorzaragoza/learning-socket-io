@@ -6,3 +6,5 @@ class Player {
         playerData
     }
 }
+
+module.exports = Player

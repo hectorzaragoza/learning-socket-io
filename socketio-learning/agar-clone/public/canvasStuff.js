@@ -1,9 +1,3 @@
-// We'll start with the init() we call when the user is ready to play
-function init() {
-    draw()
-    console.log('orbs: ', orbs)
-}
-
 // =================DRAWING====================
 // Build out the front end with mock data and then populate
 // Easier to do it this way.
