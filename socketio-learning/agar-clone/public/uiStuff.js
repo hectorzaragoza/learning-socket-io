@@ -5,6 +5,8 @@ let wWidth = $(window).width()
 // This is all things "this" player
 let player = {}
 let orbs = []
+// This will be to include players in our canvas
+let players = []
 
 let canvas = document.querySelector('#the-canvas')
 let context = canvas.getContext('2d')
@@ -24,7 +26,7 @@ $('.name-form').submit((event) => {
     document.querySelector('.player-name').innerHTML = player.name
 })
 
-$('.start-game').click(() => {
+$('.start-game').click((event) => {
     $('.modal').modal('hide')
     $('.hiddenOnStart').removeAttr('hidden')
     init()
