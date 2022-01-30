@@ -1,4 +1,10 @@
-const socket = io('http://localhost:9000') // the '/' namespace
+const username = prompt("What is your username?")
+// const socket = io('http://localhost:9000') // the '/' namespace
+const socket = io('http://localhost:9000', {
+    query: {
+        username: username
+    }
+}) // 
 let nsSocket = ""
 
 // Listen for nsList, which is a list of all namespaces
@@ -12,7 +18,8 @@ socket.on('nsList', (nsData) => {
     Array.from(document.getElementsByClassName('namespace')).forEach((elem) => {
         elem.addEventListener('click', (e) => {
             const nsEndpoint = elem.getAttribute('ns');
-            console.log('I should go here: ', nsEndpoint)
+            // console.log('I should go here: ', nsEndpoint)
+            joinNs(nsEndpoint)
         })
     })
     joinNs('/wiki')
