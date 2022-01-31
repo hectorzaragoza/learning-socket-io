@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "create-react-app": "^5.0.0",
+    "farmhash": "^3.2.2",
+    "socket.io": "^4.4.1",
+    "socket.io-redis": "^6.1.1"
+  }
+}
