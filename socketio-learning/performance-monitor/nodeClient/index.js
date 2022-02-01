@@ -33,6 +33,11 @@ socket.on('connect', () => {
     // Authentication - with single key value (random string)
     socket.emit('clientAuth', "23o2k3noidug9338joihah")
 
+    performanceData().then((allPerformanceData) => {
+        allPerformanceData.macAddress = macAddress
+        socket.emit('initPerfData', allPerformanceData)
+    })
+
     // Sending performance data from client to socket.io server on interval
     let perfDataInterval = setInterval(() => {
         performanceData().then((allPerformanceData) => {
