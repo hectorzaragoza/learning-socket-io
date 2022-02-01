@@ -12,6 +12,38 @@
 // All of this info is available in the os module
 const os = require('os')
 const { resolve } = require('path')
+// socket.io for a node client
+const io = require('socket.io-client')
+// this line sends a request to our socket.io server that is listening to port 8181
+let socket = io('http://localhost:8181')
+
+socket.on('connect', () => {
+    console.log('Node connected to the socket.io server! Hurray!')
+    // We need a way to identify this machine to whomever is concerned.
+    const networkInterface = os.networkInterfaces()
+    let macAddress
+    // Loop through all network interfaces for this maching and find a non internal one 
+    for (let key in networkInterface) {
+        if (!networkInterface[key][0].internal) {
+            macAddress = networkInterface[key][0].mac
+            break;
+        }
+    }
+
+    // Authentication - with single key value (random string)
+    socket.emit('clientAuth', "23o2k3noidug9338joihah")
+
+    // Sending performance data from client to socket.io server on interval
+    let perfDataInterval = setInterval(() => {
+        performanceData().then((allPerformanceData) => {
+            socket.emit('perfData', allPerformanceData)
+        })
+    }, 1000)
+
+    socket.on('disconnect', () => {
+        clearInterval(perfDataInterval)
+    })
+})
 
 
 function performanceData() {
@@ -89,6 +121,3 @@ function getCpuLoad() {
     })
 }
 
-performanceData().then((allPerformanceData) => {
-    console.log('All Data: ', allPerformanceData)
-})
