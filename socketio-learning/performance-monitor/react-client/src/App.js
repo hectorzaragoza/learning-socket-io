@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import socket from './utilities/socketConnection';
 import React, { Component } from 'react'
@@ -30,9 +29,17 @@ class App extends Component {
 
   render() {
   console.log('This perf data: ', this.state.performanceData)
+  let widgets = []
+  const data = this.state.performanceData
+  // Grab each maching by property
+  Object.entries(data).forEach(([key, value]) => {
+    widgets.push(<Widget key={key} data={value}/>)
+  })
+  console.log('This is the data: ', data)
+  console.log('These are my widgets', widgets)
   return (
     <div className="App">
-      <Widget />
+      {widgets}
     </div>
   );
   }
