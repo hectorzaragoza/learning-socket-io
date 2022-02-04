@@ -4,18 +4,37 @@ const Machine = require('./models/Machine')
 
 function socketMain(io, socket) {
     let macAddress;
-    socket.on('clientAutho', (key) => {
-        
+    socket.on('clientAuth', (key) => {
+        console.log('This is the react key: ', key)
         if (key === '23o2k3noidug9338joihah') {
             // Valid nodeClient
             socket.join('clients')
-        } else if(key = 'i2ih3ihjiu2n9837') {
+        } else if(key === 'i2ih3ihjiu2n9837') {
             // Valid UI client has joined
             socket.join('ui')
+            console.log('A react client has joined: key', key)
+            Machine.find({}, (err, docs) => {
+                docs.forEach((aMachine) => {
+                    // On Load, assume all machines are offline
+                    aMachine.isActive = false
+                    io.to('ui').emit('data', aMachine)
+                })
+            })
         } else {
             // An invalid client has joined
+            console.log('NOT GOOD!')
             socket.disconnect(true)
         }
+    })
+
+    socket.on('disconnect', () => {
+        Machine.find({macAddress: macAddress}, ((err, docs) => {
+            if(docs.length > 0) {
+                // Send one last emit to react
+                docs[0].isAcive = false
+                io.to('ui').emit('data', docs[0])
+            }
+        }))
     })
     
     // A machine has connected, check to see if its new, if so, add it!
@@ -29,7 +48,7 @@ function socketMain(io, socket) {
 
 
     socket.on('perfData', (data) => {
-        console.log('This is the performance data from the client (1sec): ', data)
+        io.to('ui').emit('data', data)
     })
 }
 

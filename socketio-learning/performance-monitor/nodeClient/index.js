@@ -24,8 +24,17 @@ socket.on('connect', () => {
     let macAddress
     // Loop through all network interfaces for this maching and find a non internal one 
     for (let key in networkInterface) {
+
+        // For testing purpose
+        macAddress = Math.floor(Math.random()*3) + 1
+        break;
+
         if (!networkInterface[key][0].internal) {
-            macAddress = networkInterface[key][0].mac
+            if (networkInterface[key][0].mac === '00:00:00:00:00:00') {
+                macAddress = Math.random().toString(36).substring(2,15)
+            } else {
+                macAddress = networkInterface[key][0].mac
+            }
             break;
         }
     }
@@ -41,6 +50,7 @@ socket.on('connect', () => {
     // Sending performance data from client to socket.io server on interval
     let perfDataInterval = setInterval(() => {
         performanceData().then((allPerformanceData) => {
+            allPerformanceData.macAddress = macAddress
             socket.emit('perfData', allPerformanceData)
         })
     }, 1000)
@@ -72,6 +82,7 @@ function performanceData() {
 
         // Get CPU Load
         const cpuLoad = await getCpuLoad()
+        const isActive = true
         resolve({
             freeMem,
             totMem,
@@ -82,7 +93,8 @@ function performanceData() {
             cpuModel,
             numCores,
             cpuSpeed,
-            cpuLoad
+            cpuLoad,
+            isActive
         })
     })
 }
